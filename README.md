@@ -5,9 +5,7 @@ Parses OPDS Catalog Feed to JSON using Isaac Schlueter's sax parser.
 
 ## Instllation
 
-    npm install https://github.com/musubu/node-opds-parser/tarball/master
-
-Soonly, we will make it possible to install from npm repo.
+    npm install opds-parser
 
 ## Requirements
 
