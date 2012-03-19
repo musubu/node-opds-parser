@@ -3,7 +3,7 @@
 Parses OPDS Catalog Feed to JSON using Isaac Schlueter's sax parser.
 
 
-## Instllation
+## Installation
 
     npm install opds-parser
 
