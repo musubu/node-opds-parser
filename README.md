@@ -103,6 +103,27 @@ The options default to below.
       console.log('Got entry: %s', JSON.stringify(entry));
     });
 
+### Distinguish feed type
+
+    var OpdsParser = require('opds-parser')
+      , parser = new OpdsParser();
+
+    parser.parseFile('examples/navigation.opds', function(err, result) {
+      if (!err) {
+        parser.getFeedType(result, function(err, type) {
+          if (!err) {
+            console.log(type);
+            // expected value
+            // 'navigation'
+          } else {
+            console.log(err);
+          }
+        })
+      } else {
+        console.log(err);
+      }
+    });
+
 ## Parsed Output
 
 ### Navigation feed

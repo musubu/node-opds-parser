@@ -155,4 +155,42 @@ parser.parseFile(__dirname + '/acquisition.opds', function(err, result) {
   } else {
     console.log(err);
   }
+  
+  console.log("Parser should set acquisition feed type for acquisition feed");
+
+  parser = new OpdsParser();
+  
+  parser.parseFile(__dirname + '/acquisition.opds', function(err, result) {
+    if (!err) {
+      parser.getFeedType(result, function(err, type) {
+        if (!err) {
+          assert.ok(type == 'acquisition');
+          console.log("Passed");
+        } else {
+          console.log(err);
+        }
+      })
+    } else {
+      console.log(err);
+    }
+  });
+  
+  console.log("Parser should set navigation feed type for navigation feed");
+
+  parser = new OpdsParser();
+  
+  parser.parseFile(__dirname + '/navigation.opds', function(err, result) {
+    if (!err) {
+      parser.getFeedType(result, function(err, type) {
+        if (!err) {
+          assert.ok(type == 'navigation');
+          console.log("Passed");
+        } else {
+          console.log(err);
+        }
+      })
+    } else {
+      console.log(err);
+    }
+  });
 })
