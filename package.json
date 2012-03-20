@@ -16,5 +16,6 @@
     "sax": ">=0.3.5",
     "request": ">=2.9.153"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "scripts": {"test": "node test/run.js"}
 }
