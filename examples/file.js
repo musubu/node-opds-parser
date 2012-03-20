@@ -6,7 +6,7 @@ parser = new OpdsParser();
 
 parser.parseFile(__dirname + '/navigation.opds', function(err, result) {
   if (!err) {
-    console.log(util.inspect(result, showHidden=false, depth=6));
+    console.log(util.inspect(result, showHidden=false, depth=7));
   } else {
     console.log(err);
   }
