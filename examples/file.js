@@ -4,7 +4,7 @@ var OpdsParser = require('../lib/opds-parser')
 
 parser = new OpdsParser();
 
-parser.parseFile('./navigation.opds', function(err, result) {
+parser.parseFile(__dirname + '/navigation.opds', function(err, result) {
   if (!err) {
     console.log(util.inspect(result, showHidden=false, depth=6));
   } else {
@@ -15,6 +15,7 @@ parser.parseFile('./navigation.opds', function(err, result) {
 // expected output.
 
 // { '@': [ { xmlns: 'http://www.w3.org/2005/Atom' } ],
+//   id: 'urn:uuid:2853dacf-ed79-42f5-8e8a-a7bb3d1ae6a2',
 //   title: 'OPDS Catalog Root Example',
 //   updated: '2010-01-10T10:03:10Z',
 //   author: { name: 'Spec Writer', email: null, uri: 'http://opds-spec.org' },

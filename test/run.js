@@ -24,26 +24,29 @@ parser.parseFile(__dirname + '/navigation.opds', function(err, result) {
   if (!err) {
     
     var expected = { '@': [ { xmlns: 'http://www.w3.org/2005/Atom' } ],
+      id: 'urn:uuid:2853dacf-ed79-42f5-8e8a-a7bb3d1ae6a2',
       title: 'OPDS Catalog Root Example',
       updated: '2010-01-10T10:03:10Z',
       author: { name: 'Spec Writer', email: null, uri: 'http://opds-spec.org' },
-      links: [ { '@': 
-           { rel: 'self',
-             href: '/opds-catalogs/root.xml',
-             type: 'application/atom+xml;profile=opds-catalog;kind=navigation' } },
-        { '@': 
-           { rel: 'start',
-             href: '/opds-catalogs/root.xml',
-             type: 'application/atom+xml;profile=opds-catalog;kind=navigation' } } ],
+      links: 
+       [ { '@': 
+            { rel: 'self',
+              href: '/opds-catalogs/root.xml',
+              type: 'application/atom+xml;profile=opds-catalog;kind=navigation' } },
+         { '@': 
+            { rel: 'start',
+              href: '/opds-catalogs/root.xml',
+              type: 'application/atom+xml;profile=opds-catalog;kind=navigation' } } ],
       icon: null,
       entries: 
        [ { id: 'urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56e',
            title: 'Popular Publications',
            updated: '2010-01-10T10:01:01Z',
-           links: [ { '@': 
-                { rel: 'http://opds-spec.org/sort/popular',
-                  href: '/opds-catalogs/popular.xml',
-                  type: 'application/atom+xml;profile=opds-catalog;kind=acquisition' } } ],
+           links: 
+            [ { '@': 
+                 { rel: 'http://opds-spec.org/sort/popular',
+                   href: '/opds-catalogs/popular.xml',
+                   type: 'application/atom+xml;profile=opds-catalog;kind=acquisition' } } ],
            authors: [],
            rights: null,
            summary: null,
@@ -73,11 +76,12 @@ parser = new OpdsParser();
 
 parser.parseFile(__dirname + '/acquisition.opds', function(err, result) {
   if (!err) {
-
+    
     var expected = { '@': 
        [ { xmlns: 'http://www.w3.org/2005/Atom' },
          { 'xmlns:dc': 'http://purl.org/dc/terms/' },
          { 'xmlns:opds': 'http://opds-spec.org/2010/catalog' } ],
+      id: 'urn:uuid:433a5d6a-0b8c-4933-af65-4ca4f02763eb',
       title: 'Unpopular Publications',
       updated: '2010-01-10T10:01:11Z',
       author: { name: 'Spec Writer', email: null, uri: 'http://opds-spec.org' },
