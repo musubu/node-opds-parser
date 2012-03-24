@@ -26,7 +26,7 @@ parser.parseFile(__dirname + '/navigation.opds', function(err, result) {
     var expected = { '@': [ { xmlns: 'http://www.w3.org/2005/Atom' } ],
       id: 'urn:uuid:2853dacf-ed79-42f5-8e8a-a7bb3d1ae6a2',
       title: 'OPDS Catalog Root Example',
-      updated: '2010-01-10T10:03:10Z',
+      updated: '2010-01-10T10:03:10.000Z',
       author: { name: 'Spec Writer', email: null, uri: 'http://opds-spec.org' },
       links: 
        [ { '@': 
@@ -41,7 +41,7 @@ parser.parseFile(__dirname + '/navigation.opds', function(err, result) {
       entries: 
        [ { id: 'urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56e',
            title: 'Popular Publications',
-           updated: '2010-01-10T10:01:01Z',
+           updated: '2010-01-10T10:01:01.000Z',
            links: 
             [ { '@': 
                  { rel: 'http://opds-spec.org/sort/popular',
@@ -83,7 +83,7 @@ parser.parseFile(__dirname + '/acquisition.opds', function(err, result) {
          { 'xmlns:opds': 'http://opds-spec.org/2010/catalog' } ],
       id: 'urn:uuid:433a5d6a-0b8c-4933-af65-4ca4f02763eb',
       title: 'Unpopular Publications',
-      updated: '2010-01-10T10:01:11Z',
+      updated: '2010-01-10T10:01:11.000Z',
       author: { name: 'Spec Writer', email: null, uri: 'http://opds-spec.org' },
       links: 
        [ { '@': 
@@ -106,7 +106,7 @@ parser.parseFile(__dirname + '/acquisition.opds', function(err, result) {
       entries: 
        [ { id: 'urn:uuid:6409a00b-7bf2-405e-826c-3fdff0fd0734',
            title: 'Bob, Son of Bob',
-           updated: '2010-01-10T10:01:11Z',
+           updated: '2010-01-10T10:01:11.000Z',
            links: 
             [ { '@': 
                  { rel: 'http://opds-spec.org/image',
@@ -140,7 +140,7 @@ parser.parseFile(__dirname + '/acquisition.opds', function(err, result) {
             [ { term: 'FIC020000',
                 scheme: 'http://www.bisg.org/standards/bisac_subject/index.html',
                 label: 'FICTION / Men\'s Adventure' } ],
-           'dc:issued': '1917',
+           'dc:issued': '1917-01-01T00:00:00.000Z',
            identifiers: [],
            published: null,
            contributors: [],

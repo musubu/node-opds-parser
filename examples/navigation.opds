@@ -41,4 +41,10 @@
     <id>urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56d</id>
     <content type="text">Publications that could use some love.</content>
   </entry>
+  <entry>
+    <title>Relative link test entry</title>
+    <link href="/somewhere/test.opds" rel="http://opds-spec.org/sort/popular" type="application/atom+xml;profile=opds-catalog;kind=acquisition" />
+    <updated>2010-01-10T10:02:00Z</updated>
+    <id>urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56e</id>
+  </entry>
 </feed>

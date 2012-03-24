@@ -4,7 +4,7 @@ var OpdsParser = require('../lib/opds-parser')
 
 parser = new OpdsParser();
 
-parser.parseFile(__dirname + '/navigation.opds', function(err, result) {
+parser.parseFile(__dirname + '/acquisition.opds', function(err, result) {
   if (!err) {
     console.log(util.inspect(result, showHidden=false, depth=7));
   } else {
@@ -17,7 +17,7 @@ parser.parseFile(__dirname + '/navigation.opds', function(err, result) {
 // { '@': [ { xmlns: 'http://www.w3.org/2005/Atom' } ],
 //   id: 'urn:uuid:2853dacf-ed79-42f5-8e8a-a7bb3d1ae6a2',
 //   title: 'OPDS Catalog Root Example',
-//   updated: '2010-01-10T10:03:10Z',
+//   updated: '2010-01-10T10:03:10.000Z',
 //   author: { name: 'Spec Writer', email: null, uri: 'http://opds-spec.org' },
 //   links: 
 //    [ { '@': 
@@ -32,7 +32,7 @@ parser.parseFile(__dirname + '/navigation.opds', function(err, result) {
 //   entries: 
 //    [ { id: 'urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56e',
 //        title: 'Popular Publications',
-//        updated: '2010-01-10T10:01:01Z',
+//        updated: '2010-01-10T10:01:01.000Z',
 //        links: 
 //         [ { '@': 
 //              { rel: 'http://opds-spec.org/sort/popular',
@@ -52,7 +52,7 @@ parser.parseFile(__dirname + '/navigation.opds', function(err, result) {
 //        'dc:subtitle': null },
 //      { id: 'urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56c',
 //        title: 'New Publications',
-//        updated: '2010-01-10T10:02:00Z',
+//        updated: '2010-01-10T10:02:00.000Z',
 //        links: 
 //         [ { '@': 
 //              { rel: 'http://opds-spec.org/sort/new',
@@ -72,7 +72,7 @@ parser.parseFile(__dirname + '/navigation.opds', function(err, result) {
 //        'dc:subtitle': null },
 //      { id: 'urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56d',
 //        title: 'Unpopular Publications',
-//        updated: '2010-01-10T10:01:00Z',
+//        updated: '2010-01-10T10:01:00.000Z',
 //        links: 
 //         [ { '@': 
 //              { rel: 'subsection',
@@ -82,6 +82,26 @@ parser.parseFile(__dirname + '/navigation.opds', function(err, result) {
 //        rights: null,
 //        summary: null,
 //        content: 'Publications that could use some love.',
+//        categories: [],
+//        'dc:issued': null,
+//        identifiers: [],
+//        published: null,
+//        contributors: [],
+//        'dc:language': null,
+//        'dc:publisher': null,
+//        'dc:subtitle': null },
+//      { id: 'urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56e',
+//        title: 'Relative link test entry',
+//        updated: '2010-01-10T10:02:00.000Z',
+//        links: 
+//         [ { '@': 
+//              { href: '/somewhere/test.opds',
+//                rel: 'http://opds-spec.org/sort/popular',
+//                type: 'application/atom+xml;profile=opds-catalog;kind=acquisition' } } ],
+//        authors: [],
+//        rights: null,
+//        summary: null,
+//        content: null,
 //        categories: [],
 //        'dc:issued': null,
 //        identifiers: [],

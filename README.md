@@ -173,6 +173,12 @@ Sample navigation feed from opds-spec.org (http://opds-spec.org/specs/opds-catal
         <id>urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56d</id>
         <content type="text">Publications that could use some love.</content>
       </entry>
+      <entry>
+        <title>Relative link test entry</title>
+        <link href="/somewhere/test.opds" rel="http://opds-spec.org/sort/popular" type="application/atom+xml;profile=opds-catalog;kind=acquisition" />
+        <updated>2010-01-10T10:02:00Z</updated>
+        <id>urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56e</id>
+      </entry>
     </feed>
 
 Feed above will be parsed to JSON below.
@@ -180,7 +186,7 @@ Feed above will be parsed to JSON below.
     { '@': [ { xmlns: 'http://www.w3.org/2005/Atom' } ],
       id: 'urn:uuid:2853dacf-ed79-42f5-8e8a-a7bb3d1ae6a2',
       title: 'OPDS Catalog Root Example',
-      updated: '2010-01-10T10:03:10Z',
+      updated: '2010-01-10T10:03:10.000Z',
       author: { name: 'Spec Writer', email: null, uri: 'http://opds-spec.org' },
       links: 
        [ { '@': 
@@ -195,7 +201,7 @@ Feed above will be parsed to JSON below.
       entries: 
        [ { id: 'urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56e',
            title: 'Popular Publications',
-           updated: '2010-01-10T10:01:01Z',
+           updated: '2010-01-10T10:01:01.000Z',
            links: 
             [ { '@': 
                  { rel: 'http://opds-spec.org/sort/popular',
@@ -215,7 +221,7 @@ Feed above will be parsed to JSON below.
            'dc:subtitle': null },
          { id: 'urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56c',
            title: 'New Publications',
-           updated: '2010-01-10T10:02:00Z',
+           updated: '2010-01-10T10:02:00.000Z',
            links: 
             [ { '@': 
                  { rel: 'http://opds-spec.org/sort/new',
@@ -235,7 +241,7 @@ Feed above will be parsed to JSON below.
            'dc:subtitle': null },
          { id: 'urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56d',
            title: 'Unpopular Publications',
-           updated: '2010-01-10T10:01:00Z',
+           updated: '2010-01-10T10:01:00.000Z',
            links: 
             [ { '@': 
                  { rel: 'subsection',
@@ -245,6 +251,26 @@ Feed above will be parsed to JSON below.
            rights: null,
            summary: null,
            content: 'Publications that could use some love.',
+           categories: [],
+           'dc:issued': null,
+           identifiers: [],
+           published: null,
+           contributors: [],
+           'dc:language': null,
+           'dc:publisher': null,
+           'dc:subtitle': null },
+         { id: 'urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56e',
+           title: 'Relative link test entry',
+           updated: '2010-01-10T10:02:00.000Z',
+           links: 
+            [ { '@': 
+                 { href: '/somewhere/test.opds',
+                   rel: 'http://opds-spec.org/sort/popular',
+                   type: 'application/atom+xml;profile=opds-catalog;kind=acquisition' } } ],
+           authors: [],
+           rights: null,
+           summary: null,
+           content: null,
            categories: [],
            'dc:issued': null,
            identifiers: [],
@@ -363,7 +389,7 @@ Feed above will be parsed to JSON below.
          { 'xmlns:opds': 'http://opds-spec.org/2010/catalog' } ],
       id: 'urn:uuid:433a5d6a-0b8c-4933-af65-4ca4f02763eb',
       title: 'Unpopular Publications',
-      updated: '2010-01-10T10:01:11Z',
+      updated: '2010-01-10T10:01:11.000Z',
       author: { name: 'Spec Writer', email: null, uri: 'http://opds-spec.org' },
       links: 
        [ { '@': 
@@ -386,7 +412,7 @@ Feed above will be parsed to JSON below.
       entries: 
        [ { id: 'urn:uuid:6409a00b-7bf2-405e-826c-3fdff0fd0734',
            title: 'Bob, Son of Bob',
-           updated: '2010-01-10T10:01:11Z',
+           updated: '2010-01-10T10:01:11.000Z',
            links: 
             [ { '@': 
                  { rel: 'http://opds-spec.org/image',
@@ -420,7 +446,7 @@ Feed above will be parsed to JSON below.
             [ { term: 'FIC020000',
                 scheme: 'http://www.bisg.org/standards/bisac_subject/index.html',
                 label: 'FICTION / Men\'s Adventure' } ],
-           'dc:issued': '1917',
+           'dc:issued': '1917-01-01T00:00:00.000Z',
            identifiers: [],
            published: null,
            contributors: [],
@@ -429,7 +455,7 @@ Feed above will be parsed to JSON below.
            'dc:subtitle': null },
          { id: 'urn:uuid:7b595b0c-e15c-4755-bf9a-b7019f5c1dab',
            title: 'Modern Online Philately',
-           updated: '2010-01-10T10:01:10Z',
+           updated: '2010-01-10T10:01:10.000Z',
            links: 
             [ { '@': 
                  { rel: 'http://opds-spec.org/image',
@@ -440,8 +466,8 @@ Feed above will be parsed to JSON below.
                    href: '/content/buy/11241.epub',
                    type: 'application/epub+zip' },
                 'opds:price': 
-                 [ { '@': [Object], '#': '18.99' },
-                   { '@': [Object], '#': '11.99' } ] } ],
+                 [ { '@': { currencycode: 'USD' }, '#': '18.99' },
+                   { '@': { currencycode: 'GBP' }, '#': '11.99' } ] } ],
            authors: 
             [ { name: 'Stampy McGee',
                 email: null,
@@ -456,7 +482,7 @@ Feed above will be parsed to JSON below.
            summary: null,
            content: 'The definitive reference for the web-curious philatelist.',
            categories: [],
-           'dc:issued': '2009-10-01',
+           'dc:issued': '2009-10-01T00:00:00.000Z',
            identifiers: [ 'urn:isbn:978029536341X' ],
            published: null,
            contributors: [],
