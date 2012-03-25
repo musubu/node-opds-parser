@@ -2,7 +2,7 @@
   "name": "opds-parser",
   "author": "Musubu Inc. <dev@musubu.co.jp>",
   "description": "OPDS catalog feed parser for node",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/musubu/node-opds-parser"
