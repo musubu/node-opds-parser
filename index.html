@@ -1,0 +1,583 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Node-opds-parser by musubu</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Node-opds-parser</h1>
+        <p>OPDS Catalog Feed Parser for node</p>
+        <p class="view"><a href="https://github.com/musubu/node-opds-parser">View the Project on GitHub <small>musubu/node-opds-parser</small></a></p>
+        <ul>
+          <li><a href="https://github.com/musubu/node-opds-parser/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/musubu/node-opds-parser/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/musubu/node-opds-parser">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>OPDS Parser for node</h1>
+
+<p>Parses OPDS Catalog Feed to JSON using Isaac Schlueter's sax parser.</p>
+
+<h2>Installation</h2>
+
+<pre><code>npm install opds-parser
+</code></pre>
+
+<h2>Requirements</h2>
+
+<ul>
+<li><a href="https://github.com/mikeal/request">request</a></li>
+<li><a href="https://github.com/isaacs/sax-js">sax</a></li>
+</ul><h2>Speed</h2>
+
+<p>Roughly 45,000 entries/s on 2.4 GHz Core i5 MacBook Pro.</p>
+
+<p>Try <code>examples/bench.js</code> yourself.</p>
+
+<h2>Examples</h2>
+
+<h3>Parse from file</h3>
+
+<pre><code>var OpdsParser = require('opds-parser')
+  , parser;
+
+parser = new OpdsParser();
+
+parser.parseFile('./navigation.opds', function(err, result) {
+  if (!err) {
+    console.log(result);
+  } else {
+    console.log(err);
+  }
+})
+</code></pre>
+
+<h3>Parse from URL</h3>
+
+<pre><code>var OpdsParser = require('opds-parser')
+  , parser;
+
+parser = new OpdsParser();
+
+var url = '<a href="http://www.oreilly.co.jp/ebook/new.opds">http://www.oreilly.co.jp/ebook/new.opds</a>';
+
+parser.parseUrl(url, {}, function(err, result) {
+  if (!err) {
+    console.log(result);
+  } else {
+    console.log(err);
+  }
+})
+</code></pre>
+
+<p>To change http agent's option, pass options to parseUrl method.</p>
+
+<pre><code>var OpdsParser = require('opds-parser')
+  , parser;
+
+parser = new OpdsParser();
+
+var url = '<a href="http://www.oreilly.co.jp/ebook/new.opds">http://www.oreilly.co.jp/ebook/new.opds</a>'
+  , options = {
+    maxRedirects: 5
+    , timeout: 5 * 1000
+    , headers: {
+      'User-Agent': 'your-own-user-agent'
+    }
+  }
+
+parser.parseUrl(url, options, function(err, result) {
+  if (!err) {
+    console.log(result);
+  } else {
+    console.log(err);
+  }
+})
+</code></pre>
+
+<p>The options default to below.</p>
+
+<pre><code>defaultOptions = {
+  , method: 'GET'
+  , followRedirect: true
+  , followAllRedirects: false
+  , maxRedirects: 3
+  , timeout: 30 * 1000
+  , jar: false
+  , headers: {
+    'User-Agent': 'node-opds-parser'
+  }
+}
+</code></pre>
+
+<h3>Use as an EventEmitter</h3>
+
+<pre><code>var OpdsParser = require('opds-parser')
+  , parser;
+
+parser = new OpdsParser();
+
+parser.parseFile('./navigation.opds');
+
+parser.on('entry', function(entry) {
+  console.log('Got entry: %s', JSON.stringify(entry));
+});
+</code></pre>
+
+<h3>Distinguish feed type</h3>
+
+<pre><code>var OpdsParser = require('opds-parser')
+  , parser = new OpdsParser();
+
+parser.parseFile('examples/navigation.opds', function(err, result) {
+  if (!err) {
+    parser.getFeedType(result, function(err, type) {
+      if (!err) {
+        console.log(type);
+        // expected value
+        // 'navigation'
+      } else {
+        console.log(err);
+      }
+    })
+  } else {
+    console.log(err);
+  }
+});
+</code></pre>
+
+<h2>Parsed Output</h2>
+
+<h3>Navigation feed</h3>
+
+<p>Sample navigation feed from opds-spec.org (<a href="http://opds-spec.org/specs/opds-catalog-1-1-20110627/#Feed_Examples">http://opds-spec.org/specs/opds-catalog-1-1-20110627/#Feed_Examples</a>)</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;feed xmlns="<a href="http://www.w3.org/2005/Atom">http://www.w3.org/2005/Atom</a>"&gt;
+  &lt;id&gt;urn:uuid:2853dacf-ed79-42f5-8e8a-a7bb3d1ae6a2&lt;/id&gt;
+  &lt;link rel="self"  
+        href="/opds-catalogs/root.xml" 
+        type="application/atom+xml;profile=opds-catalog;kind=navigation"/&gt;
+  &lt;link rel="start" 
+        href="/opds-catalogs/root.xml" 
+        type="application/atom+xml;profile=opds-catalog;kind=navigation"/&gt;
+  &lt;title&gt;OPDS Catalog Root Example&lt;/title&gt;
+  &lt;updated&gt;2010-01-10T10:03:10Z&lt;/updated&gt;
+  &lt;author&gt;
+    &lt;name&gt;Spec Writer&lt;/name&gt;
+    &lt;uri&gt;<a href="http://opds-spec.org&lt;/uri">http://opds-spec.org&lt;/uri</a>&gt;
+  &lt;/author&gt;
+
+  &lt;entry&gt;
+    &lt;title&gt;Popular Publications&lt;/title&gt;
+    &lt;link rel="<a href="http://opds-spec.org/sort/popular">http://opds-spec.org/sort/popular</a>" 
+          href="/opds-catalogs/popular.xml"
+          type="application/atom+xml;profile=opds-catalog;kind=acquisition"/&gt;
+    &lt;updated&gt;2010-01-10T10:01:01Z&lt;/updated&gt;
+    &lt;id&gt;urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56e&lt;/id&gt;
+    &lt;content type="text"&gt;Popular publications from this catalog based on downloads.&lt;/content&gt;
+  &lt;/entry&gt;
+  &lt;entry&gt;
+    &lt;title&gt;New Publications&lt;/title&gt;
+    &lt;link rel="<a href="http://opds-spec.org/sort/new">http://opds-spec.org/sort/new</a>" 
+          href="/opds-catalogs/new.xml"
+          type="application/atom+xml;profile=opds-catalog;kind=acquisition"/&gt;
+    &lt;updated&gt;2010-01-10T10:02:00Z&lt;/updated&gt;
+    &lt;id&gt;urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56c&lt;/id&gt;
+    &lt;content type="text"&gt;Recent publications from this catalog.&lt;/content&gt;
+  &lt;/entry&gt;
+  &lt;entry&gt;
+    &lt;title&gt;Unpopular Publications&lt;/title&gt;
+    &lt;link rel="subsection" 
+          href="/opds-catalogs/unpopular.xml"
+          type="application/atom+xml;profile=opds-catalog;kind=acquisition"/&gt;
+    &lt;updated&gt;2010-01-10T10:01:00Z&lt;/updated&gt;
+    &lt;id&gt;urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56d&lt;/id&gt;
+    &lt;content type="text"&gt;Publications that could use some love.&lt;/content&gt;
+  &lt;/entry&gt;
+  &lt;entry&gt;
+    &lt;title&gt;Relative link test entry&lt;/title&gt;
+    &lt;link href="/somewhere/test.opds" rel="<a href="http://opds-spec.org/sort/popular">http://opds-spec.org/sort/popular</a>" type="application/atom+xml;profile=opds-catalog;kind=acquisition" /&gt;
+    &lt;updated&gt;2010-01-10T10:02:00Z&lt;/updated&gt;
+    &lt;id&gt;urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56e&lt;/id&gt;
+  &lt;/entry&gt;
+&lt;/feed&gt;
+</code></pre>
+
+<p>Feed above will be parsed to JSON below.</p>
+
+<pre><code>{ '@': [ { xmlns: '<a href="http://www.w3.org/2005/Atom">http://www.w3.org/2005/Atom</a>' } ],
+  id: 'urn:uuid:2853dacf-ed79-42f5-8e8a-a7bb3d1ae6a2',
+  title: 'OPDS Catalog Root Example',
+  updated: '2010-01-10T10:03:10.000Z',
+  author: { name: 'Spec Writer', email: null, uri: '<a href="http://opds-spec.org">http://opds-spec.org</a>' },
+  links: 
+   [ { '@': 
+        { rel: 'self',
+          href: '/opds-catalogs/root.xml',
+          type: 'application/atom+xml;profile=opds-catalog;kind=navigation' } },
+     { '@': 
+        { rel: 'start',
+          href: '/opds-catalogs/root.xml',
+          type: 'application/atom+xml;profile=opds-catalog;kind=navigation' } } ],
+  icon: null,
+  entries: 
+   [ { id: 'urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56e',
+       title: 'Popular Publications',
+       updated: '2010-01-10T10:01:01.000Z',
+       links: 
+        [ { '@': 
+             { rel: '<a href="http://opds-spec.org/sort/popular">http://opds-spec.org/sort/popular</a>',
+               href: '/opds-catalogs/popular.xml',
+               type: 'application/atom+xml;profile=opds-catalog;kind=acquisition' } } ],
+       authors: [],
+       rights: null,
+       summary: null,
+       content: 'Popular publications from this catalog based on downloads.',
+       categories: [],
+       'dc:issued': null,
+       identifiers: [],
+       published: null,
+       contributors: [],
+       'dc:language': null,
+       'dc:publisher': null,
+       'dc:subtitle': null },
+     { id: 'urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56c',
+       title: 'New Publications',
+       updated: '2010-01-10T10:02:00.000Z',
+       links: 
+        [ { '@': 
+             { rel: '<a href="http://opds-spec.org/sort/new">http://opds-spec.org/sort/new</a>',
+               href: '/opds-catalogs/new.xml',
+               type: 'application/atom+xml;profile=opds-catalog;kind=acquisition' } } ],
+       authors: [],
+       rights: null,
+       summary: null,
+       content: 'Recent publications from this catalog.',
+       categories: [],
+       'dc:issued': null,
+       identifiers: [],
+       published: null,
+       contributors: [],
+       'dc:language': null,
+       'dc:publisher': null,
+       'dc:subtitle': null },
+     { id: 'urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56d',
+       title: 'Unpopular Publications',
+       updated: '2010-01-10T10:01:00.000Z',
+       links: 
+        [ { '@': 
+             { rel: 'subsection',
+               href: '/opds-catalogs/unpopular.xml',
+               type: 'application/atom+xml;profile=opds-catalog;kind=acquisition' } } ],
+       authors: [],
+       rights: null,
+       summary: null,
+       content: 'Publications that could use some love.',
+       categories: [],
+       'dc:issued': null,
+       identifiers: [],
+       published: null,
+       contributors: [],
+       'dc:language': null,
+       'dc:publisher': null,
+       'dc:subtitle': null },
+     { id: 'urn:uuid:d49e8018-a0e0-499e-9423-7c175fa0c56e',
+       title: 'Relative link test entry',
+       updated: '2010-01-10T10:02:00.000Z',
+       links: 
+        [ { '@': 
+             { href: '/somewhere/test.opds',
+               rel: '<a href="http://opds-spec.org/sort/popular">http://opds-spec.org/sort/popular</a>',
+               type: 'application/atom+xml;profile=opds-catalog;kind=acquisition' } } ],
+       authors: [],
+       rights: null,
+       summary: null,
+       content: null,
+       categories: [],
+       'dc:issued': null,
+       identifiers: [],
+       published: null,
+       contributors: [],
+       'dc:language': null,
+       'dc:publisher': null,
+       'dc:subtitle': null } ] }
+</code></pre>
+
+<h3>Acquisition feed</h3>
+
+<p>Sample acquisition feed from opds-spec.org (<a href="http://opds-spec.org/specs/opds-catalog-1-1-20110627/#Feed_Examples">http://opds-spec.org/specs/opds-catalog-1-1-20110627/#Feed_Examples</a>)</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;feed xmlns="<a href="http://www.w3.org/2005/Atom">http://www.w3.org/2005/Atom</a>"
+      xmlns:dc="<a href="http://purl.org/dc/terms/">http://purl.org/dc/terms/</a>"
+      xmlns:opds="<a href="http://opds-spec.org/2010/catalog">http://opds-spec.org/2010/catalog</a>"&gt;
+  &lt;id&gt;urn:uuid:433a5d6a-0b8c-4933-af65-4ca4f02763eb&lt;/id&gt;
+
+  &lt;link rel="related" 
+        href="/opds-catalogs/vampire.farming.xml" 
+        type="application/atom+xml;profile=opds-catalog;kind=acquisition"/&gt;
+  &lt;link rel="self"    
+        href="/opds-catalogs/unpopular.xml"
+        type="application/atom+xml;profile=opds-catalog;kind=acquisition"/&gt;
+  &lt;link rel="start"   
+        href="/opds-catalogs/root.xml"
+        type="application/atom+xml;profile=opds-catalog;kind=navigation"/&gt;
+  &lt;link rel="up"      
+        href="/opds-catalogs/root.xml"
+        type="application/atom+xml;profile=opds-catalog;kind=navigation"/&gt;
+
+  &lt;title&gt;Unpopular Publications&lt;/title&gt;
+  &lt;updated&gt;2010-01-10T10:01:11Z&lt;/updated&gt;
+  &lt;author&gt;
+    &lt;name&gt;Spec Writer&lt;/name&gt;
+    &lt;uri&gt;<a href="http://opds-spec.org&lt;/uri">http://opds-spec.org&lt;/uri</a>&gt;
+  &lt;/author&gt;
+
+  &lt;entry&gt;
+    &lt;title&gt;Bob, Son of Bob&lt;/title&gt;
+    &lt;id&gt;urn:uuid:6409a00b-7bf2-405e-826c-3fdff0fd0734&lt;/id&gt;
+    &lt;updated&gt;2010-01-10T10:01:11Z&lt;/updated&gt;
+    &lt;author&gt;
+      &lt;name&gt;Bob the Recursive&lt;/name&gt;
+      &lt;uri&gt;<a href="http://opds-spec.org/authors/1285&lt;/uri">http://opds-spec.org/authors/1285&lt;/uri</a>&gt;
+    &lt;/author&gt;
+    &lt;dc:language&gt;en&lt;/dc:language&gt;
+    &lt;dc:issued&gt;1917&lt;/dc:issued&gt;
+    &lt;category scheme="<a href="http://www.bisg.org/standards/bisac_subject/index.html">http://www.bisg.org/standards/bisac_subject/index.html</a>"
+              term="FIC020000"
+              label="FICTION / Men's Adventure"/&gt;
+    &lt;summary&gt;The story of the son of the Bob and the gallant part he played in
+      the lives of a man and a woman.&lt;/summary&gt;
+    &lt;link rel="<a href="http://opds-spec.org/image">http://opds-spec.org/image</a>"     
+          href="/covers/4561.lrg.png"
+          type="image/png"/&gt; 
+    &lt;link rel="<a href="http://opds-spec.org/image/thumbnail">http://opds-spec.org/image/thumbnail</a>" 
+          href="/covers/4561.thmb.gif"
+          type="image/gif"/&gt;
+
+    &lt;link rel="alternate"
+          href="/opds-catalogs/entries/4571.complete.xml"
+          type="application/atom+xml;type=entry;profile=opds-catalog" 
+          title="Complete Catalog Entry for Bob, Son of Bob"/&gt;
+
+    &lt;link rel="<a href="http://opds-spec.org/acquisition">http://opds-spec.org/acquisition</a>" 
+          href="/content/free/4561.epub"
+          type="application/epub+zip"/&gt;
+    &lt;link rel="<a href="http://opds-spec.org/acquisition">http://opds-spec.org/acquisition</a>" 
+          href="/content/free/4561.mobi"
+          type="application/x-mobipocket-ebook"/&gt;
+  &lt;/entry&gt;
+
+  &lt;entry&gt;
+    &lt;title&gt;Modern Online Philately&lt;/title&gt;
+    &lt;id&gt;urn:uuid:7b595b0c-e15c-4755-bf9a-b7019f5c1dab&lt;/id&gt;
+    &lt;author&gt;
+      &lt;name&gt;Stampy McGee&lt;/name&gt;
+      &lt;uri&gt;<a href="http://opds-spec.org/authors/21285&lt;/uri">http://opds-spec.org/authors/21285&lt;/uri</a>&gt;
+    &lt;/author&gt;
+    &lt;author&gt;
+      &lt;name&gt;Alice McGee&lt;/name&gt;
+      &lt;uri&gt;<a href="http://opds-spec.org/authors/21284&lt;/uri">http://opds-spec.org/authors/21284&lt;/uri</a>&gt;
+    &lt;/author&gt;
+    &lt;author&gt;
+      &lt;name&gt;Harold McGee&lt;/name&gt;
+      &lt;uri&gt;<a href="http://opds-spec.org/authors/21283&lt;/uri">http://opds-spec.org/authors/21283&lt;/uri</a>&gt;
+    &lt;/author&gt;
+    &lt;updated&gt;2010-01-10T10:01:10Z&lt;/updated&gt;
+    &lt;rights&gt;Copyright (c) 2009, Stampy McGee&lt;/rights&gt;
+    &lt;dc:identifier&gt;urn:isbn:978029536341X&lt;/dc:identifier&gt;
+    &lt;dc:publisher&gt;StampMeOnline, Inc.&lt;/dc:publisher&gt;
+    &lt;dc:language&gt;en&lt;/dc:language&gt;
+    &lt;dc:issued&gt;2009-10-01&lt;/dc:issued&gt;
+    &lt;content type="text"&gt;The definitive reference for the web-curious
+      philatelist.&lt;/content&gt;
+    &lt;link rel="<a href="http://opds-spec.org/image">http://opds-spec.org/image</a>"     
+          href="/covers/11241.lrg.jpg"
+          type="image/jpeg"/&gt; 
+
+    &lt;link rel="<a href="http://opds-spec.org/acquisition/buy">http://opds-spec.org/acquisition/buy</a>" 
+          href="/content/buy/11241.epub"
+          type="application/epub+zip"&gt;
+      &lt;opds:price currencycode="USD"&gt;18.99&lt;/opds:price&gt;
+      &lt;opds:price currencycode="GBP"&gt;11.99&lt;/opds:price&gt;
+    &lt;/link&gt;
+  &lt;/entry&gt;
+&lt;/feed&gt;
+</code></pre>
+
+<p>Feed above will be parsed to JSON below.</p>
+
+<pre><code>{ '@': 
+   [ { xmlns: '<a href="http://www.w3.org/2005/Atom">http://www.w3.org/2005/Atom</a>' },
+     { 'xmlns:dc': '<a href="http://purl.org/dc/terms/">http://purl.org/dc/terms/</a>' },
+     { 'xmlns:opds': '<a href="http://opds-spec.org/2010/catalog">http://opds-spec.org/2010/catalog</a>' } ],
+  id: 'urn:uuid:433a5d6a-0b8c-4933-af65-4ca4f02763eb',
+  title: 'Unpopular Publications',
+  updated: '2010-01-10T10:01:11.000Z',
+  author: { name: 'Spec Writer', email: null, uri: '<a href="http://opds-spec.org">http://opds-spec.org</a>' },
+  links: 
+   [ { '@': 
+        { rel: 'related',
+          href: '/opds-catalogs/vampire.farming.xml',
+          type: 'application/atom+xml;profile=opds-catalog;kind=acquisition' } },
+     { '@': 
+        { rel: 'self',
+          href: '/opds-catalogs/unpopular.xml',
+          type: 'application/atom+xml;profile=opds-catalog;kind=acquisition' } },
+     { '@': 
+        { rel: 'start',
+          href: '/opds-catalogs/root.xml',
+          type: 'application/atom+xml;profile=opds-catalog;kind=navigation' } },
+     { '@': 
+        { rel: 'up',
+          href: '/opds-catalogs/root.xml',
+          type: 'application/atom+xml;profile=opds-catalog;kind=navigation' } } ],
+  icon: null,
+  entries: 
+   [ { id: 'urn:uuid:6409a00b-7bf2-405e-826c-3fdff0fd0734',
+       title: 'Bob, Son of Bob',
+       updated: '2010-01-10T10:01:11.000Z',
+       links: 
+        [ { '@': 
+             { rel: '<a href="http://opds-spec.org/image">http://opds-spec.org/image</a>',
+               href: '/covers/4561.lrg.png',
+               type: 'image/png' } },
+          { '@': 
+             { rel: '<a href="http://opds-spec.org/image/thumbnail">http://opds-spec.org/image/thumbnail</a>',
+               href: '/covers/4561.thmb.gif',
+               type: 'image/gif' } },
+          { '@': 
+             { rel: 'alternate',
+               href: '/opds-catalogs/entries/4571.complete.xml',
+               type: 'application/atom+xml;type=entry;profile=opds-catalog',
+               title: 'Complete Catalog Entry for Bob, Son of Bob' } },
+          { '@': 
+             { rel: '<a href="http://opds-spec.org/acquisition">http://opds-spec.org/acquisition</a>',
+               href: '/content/free/4561.epub',
+               type: 'application/epub+zip' } },
+          { '@': 
+             { rel: '<a href="http://opds-spec.org/acquisition">http://opds-spec.org/acquisition</a>',
+               href: '/content/free/4561.mobi',
+               type: 'application/x-mobipocket-ebook' } } ],
+       authors: 
+        [ { name: 'Bob the Recursive',
+            email: null,
+            uri: '<a href="http://opds-spec.org/authors/1285">http://opds-spec.org/authors/1285</a>' } ],
+       rights: null,
+       summary: 'The story of the son of the Bob and the gallant part he played in the lives of a man and a woman.',
+       content: null,
+       categories: 
+        [ { term: 'FIC020000',
+            scheme: '<a href="http://www.bisg.org/standards/bisac_subject/index.html">http://www.bisg.org/standards/bisac_subject/index.html</a>',
+            label: 'FICTION / Men\'s Adventure' } ],
+       'dc:issued': '1917-01-01T00:00:00.000Z',
+       identifiers: [],
+       published: null,
+       contributors: [],
+       'dc:language': 'en',
+       'dc:publisher': null,
+       'dc:subtitle': null },
+     { id: 'urn:uuid:7b595b0c-e15c-4755-bf9a-b7019f5c1dab',
+       title: 'Modern Online Philately',
+       updated: '2010-01-10T10:01:10.000Z',
+       links: 
+        [ { '@': 
+             { rel: '<a href="http://opds-spec.org/image">http://opds-spec.org/image</a>',
+               href: '/covers/11241.lrg.jpg',
+               type: 'image/jpeg' } },
+          { '@': 
+             { rel: '<a href="http://opds-spec.org/acquisition/buy">http://opds-spec.org/acquisition/buy</a>',
+               href: '/content/buy/11241.epub',
+               type: 'application/epub+zip' },
+            'opds:price': 
+             [ { '@': { currencycode: 'USD' }, '#': '18.99' },
+               { '@': { currencycode: 'GBP' }, '#': '11.99' } ] } ],
+       authors: 
+        [ { name: 'Stampy McGee',
+            email: null,
+            uri: '<a href="http://opds-spec.org/authors/21285">http://opds-spec.org/authors/21285</a>' },
+          { name: 'Alice McGee',
+            email: null,
+            uri: '<a href="http://opds-spec.org/authors/21284">http://opds-spec.org/authors/21284</a>' },
+          { name: 'Harold McGee',
+            email: null,
+            uri: '<a href="http://opds-spec.org/authors/21283">http://opds-spec.org/authors/21283</a>' } ],
+       rights: 'Copyright (c) 2009, Stampy McGee',
+       summary: null,
+       content: 'The definitive reference for the web-curious philatelist.',
+       categories: [],
+       'dc:issued': '2009-10-01T00:00:00.000Z',
+       identifiers: [ 'urn:isbn:978029536341X' ],
+       published: null,
+       contributors: [],
+       'dc:language': 'en',
+       'dc:publisher': 'StampMeOnline, Inc.',
+       'dc:subtitle': null } ] }
+</code></pre>
+
+<h3>Parseable elements</h3>
+
+<p>node-opds-parser can parse all elements specified in OPDS spec (<a href="http://opds-spec.org/specs/opds-catalog-1-1-20110627/#OPDS_Catalog_Entry_Documents">http://opds-spec.org/specs/opds-catalog-1-1-20110627/#OPDS_Catalog_Entry_Documents</a>). In addition to that, the parser can parse some elements commonly appeared in real world OPDS feeds such as dc:publisher.</p>
+
+<p>For a skelton object for entry, see below.</p>
+
+<pre><code>// Entry elements specified in OPDS spec.
+// See <a href="http://opds-spec.org/specs/opds-catalog-1-1-20110627/#OPDS_Catalog_Entry_Documents">http://opds-spec.org/specs/opds-catalog-1-1-20110627/#OPDS_Catalog_Entry_Documents</a>
+var entry = {
+  // MUST
+  id: null
+  , title: ''
+  , updated: null
+  , links: []
+  // SHOULD
+  , authors: []
+  , rights: null
+  , summary: null
+  , content: null
+  , categories: []
+  , "dc:issued": null
+  , identifiers: []
+  // MAY
+  , published: null
+  , contributors: []
+  // Not specified in opds-spec
+  // but appears in real world feeds
+  , "dc:language": null
+  , "dc:publisher": null
+  , "dc:subtitle": null
+}
+</code></pre>
+
+<h2>License</h2>
+
+<p>(The MIT License)</p>
+
+<p>Copyright (c) 2011 Musubu Inc. &lt;dev@musubu.co.jp&gt;</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/musubu">musubu</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
